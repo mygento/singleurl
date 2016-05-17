@@ -100,11 +100,11 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
             foreach ($products as $product) {
 
-                if ($enableOptimize && $excludeProductsDisabled && $product->getData('status') == Mage_Catalog_Model_Product_Status::STATUS_DISABLED) {
+                if ($excludeProductsDisabled && $product->getData('status') == Mage_Catalog_Model_Product_Status::STATUS_DISABLED) {
                     continue;
                 }
 
-                if ($enableOptimize && $excludeHidden && $product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
+                if ($excludeHidden && $product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
                     continue;
                 }
 

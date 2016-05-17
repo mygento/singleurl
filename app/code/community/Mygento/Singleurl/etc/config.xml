@@ -22,7 +22,7 @@
             </singleurl>
             <catalog>
                 <rewrite>
-                    <!--<product_url>Mygento_Singleurl_Model_Rewrite_Url_Product_Abstract</product_url>-->
+                    <product_url>Mygento_Singleurl_Model_Rewrite_Product_Url</product_url>
                     <url>Mygento_Singleurl_Model_Rewrite_Url</url>
                 </rewrite>
             </catalog>

@@ -74,6 +74,7 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
         $process = true;
 
         while ($process == true) {
+            //todo - make join this status and visibility
             $products = $this->getResource()->getProductsByStore($storeId, $lastEntityId);
             if (!$products) {
                 $process = false;
@@ -92,7 +93,6 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
             }
 
             if ($loadCategories) {
-                Mage::log('LOAD');
                 foreach ($this->getResource()->getCategories($loadCategories, $storeId) as $category) {
                     $this->_categories[$category->getId()] = $category;
                 }
@@ -110,12 +110,13 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
 
 
+
                 $cnt_cats = count($product->getCategoryIds());
                 if (Mage::getStoreConfig('dev/singleurl/level') == 'root' || $cnt_cats == 0) {
                     $this->_refreshProductRewrite($product, $this->_categories[$storeRootCategoryId]);
                     continue;
                 }
-                foreach ($product->getCategoryIds() as $categoryId) {
+                foreach (Mage::helper('singleurl')->getCategories($product->getId(), $storeId, true) as $categoryId) {
                     if ($categoryId != $storeRootCategoryId && isset($this->_categories[$categoryId])) {
                         if (strpos($this->_categories[$categoryId]['path'], $storeRootCategoryPath . '/') !== 0) {
                             continue;

@@ -1,4 +1,4 @@
-app/code/local/Mygento/Singleurl app/code/local/Mygento/Singleurl
+app/code/community/Mygento/Singleurl app/community/local/Mygento/Singleurl
 app/etc/modules/Mygento_Singleurl.xml app/etc/modules/Mygento_Singleurl.xml
 app/locale/en_US/Mygento_Singleurl.csv app/locale/en_US/Mygento_Singleurl.csv
 app/locale/ru_RU/Mygento_Singleurl.csv app/locale/ru_RU/Mygento_Singleurl.csv

@@ -27,13 +27,6 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
             $categories = Mage::helper('singleurl')->getCategories($product->getId(), $storeId);
             $this->_rewrites = $this->getResource()->prepareRewrites($storeId, '', $productId);
 
-            // Add rewrites for all needed categories
-            // If product is assigned to any of store's categories -
-            // we also should use store root category to create root product url rewrite
-            if (!isset($categories[$storeRootCategoryId])) {
-                $categories[$storeRootCategoryId] = $this->getResource()->getCategory($storeRootCategoryId, $storeId);
-            }
-
             // Create product url rewrites
             foreach ($categories as $category) {
                 $this->_refreshProductRewrite($product, $category);

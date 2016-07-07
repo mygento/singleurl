@@ -27,14 +27,21 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
             $categories = Mage::helper('singleurl')->getCategories($product->getId(), $storeId);
             $this->_rewrites = $this->getResource()->prepareRewrites($storeId, '', $productId);
 
-            // Create product url rewrites
-            foreach ($categories as $category) {
+            // if no category is assigned
+            if (count($categories) == 0) {
+                $category = $this->getResource()->getCategory($storeRootCategoryId, $storeId);
                 $this->_refreshProductRewrite($product, $category);
+            } else {
+                // Create product url rewrites
+                foreach ($categories as $category) {
+                    $this->_refreshProductRewrite($product, $category);
+                }
+                // Remove all other product rewrites created earlier for this store - they're invalid now
+//                $excludeCategoryIds = array_keys($categories);
+//                $this->getResource()->clearProductRewrites($productId, $storeId, $excludeCategoryIds);
             }
 
-            // Remove all other product rewrites created earlier for this store - they're invalid now
-            $excludeCategoryIds = array_keys($categories);
-            $this->getResource()->clearProductRewrites($productId, $storeId, $excludeCategoryIds);
+
 
             unset($categories);
             unset($product);
@@ -70,6 +77,7 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
             //todo - make join this status and visibility
             $products = $this->getResource()->getProductsByStore($storeId, $lastEntityId);
             if (!$products) {
+                Mage::log(4);
                 $process = false;
                 break;
             }
@@ -100,8 +108,6 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
                 if ($excludeHidden && $product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
                     continue;
                 }
-
-
 
 
                 $cnt_cats = count($product->getCategoryIds());

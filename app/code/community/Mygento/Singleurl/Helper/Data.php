@@ -33,6 +33,7 @@ class Mygento_Singleurl_Helper_Data extends Mage_Core_Helper_Abstract {
         }
         $collection->getSelect()->order('cat_position ASC');
         $collection->getSelect()->limit(1);
+        Mage::log((string) $collection->getSelect());
         if (!$justIds) {
             return $collection;
         }

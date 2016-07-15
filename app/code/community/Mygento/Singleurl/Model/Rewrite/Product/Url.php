@@ -28,6 +28,11 @@ class Mygento_Singleurl_Model_Rewrite_Product_Url extends Mygento_Singleurl_Mode
         $select = $read->select();
         $select->from(Mage::getConfig()->getTablePrefix() . 'core_url_rewrite');
         $select->where('product_id = ?', $product->getId());
+        if (isset($params['_store'])) {
+            $select->where('store_id = ?', $this->_getStoreId($params['_store']));
+        } else {
+            $select->where('store_id = ?', $product->getStoreId());
+        }
         $select->limit(1);
         $row = $read->fetchRow($select);
         return Mage::getBaseUrl('link') . $row['request_path'];

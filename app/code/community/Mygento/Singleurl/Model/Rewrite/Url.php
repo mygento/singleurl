@@ -17,7 +17,6 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
             }
             return $this;
         }
-
         $product = $this->getResource()->getProduct($productId, $storeId);
         if ($product) {
             $store = $this->getStores($storeId);
@@ -25,23 +24,24 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
             // List of categories the product is assigned to, filtered by being within the store's categories root
             $categories = Mage::helper('singleurl')->getCategories($product->getId(), $storeId);
-            $this->_rewrites = $this->getResource()->prepareRewrites($storeId, '', $productId);
-
             // if no category is assigned
             if (count($categories) == 0) {
                 $category = $this->getResource()->getCategory($storeRootCategoryId, $storeId);
+                $category->setStoreId($storeId);
+                $this->_rewrites = $this->getResource()->prepareRewrites($storeId, $storeRootCategoryId, $productId);
                 $this->_refreshProductRewrite($product, $category);
             } else {
                 // Create product url rewrites
+                $excludeCategoryIds = [];
                 foreach ($categories as $category) {
+                    $category->setStoreId($storeId);
                     $this->_refreshProductRewrite($product, $category);
+                    $excludeCategoryIds[] = $category->getId();
                 }
+                $this->_rewrites = $this->getResource()->prepareRewrites($storeId, $excludeCategoryIds, $productId);
                 // Remove all other product rewrites created earlier for this store - they're invalid now
-//                $excludeCategoryIds = array_keys($categories);
-//                $this->getResource()->clearProductRewrites($productId, $storeId, $excludeCategoryIds);
+                $this->getResource()->clearProductRewrites($productId, $storeId, $excludeCategoryIds);
             }
-
-
 
             unset($categories);
             unset($product);
@@ -77,7 +77,6 @@ class Mygento_Singleurl_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
             //todo - make join this status and visibility
             $products = $this->getResource()->getProductsByStore($storeId, $lastEntityId);
             if (!$products) {
-                Mage::log(4);
                 $process = false;
                 break;
             }
